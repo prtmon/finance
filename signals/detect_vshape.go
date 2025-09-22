@@ -5,7 +5,7 @@ package signals
 import (
 	"errors"
 	"github.com/prtmon/finance/common"
-	"github.com/prtmon/utils"
+	"github.com/prtmon/tools"
 )
 
 // VShapeSignal 检测结果结构体
@@ -142,7 +142,7 @@ func DetectVShape(klines common.Candlesticks, window int, dropThreshold, rebound
 			confirmed
 
 		signals = append(signals, VShapeSignal{
-			Date:             utils.ToInt64(klines[i].Time),
+			Date:             tools.ToInt64(klines[i].Time),
 			IsValidV:         isValidV,
 			DropRatio:        cumulativeDrop,
 			ConfirmationDays: confirmationDays,

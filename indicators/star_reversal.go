@@ -2,7 +2,7 @@ package indicators
 
 import (
 	"github.com/prtmon/finance/common"
-	"github.com/prtmon/utils"
+	"github.com/prtmon/tools"
 )
 
 // 实体类型判断（新增阈值常量）
@@ -19,12 +19,12 @@ type StarReversal struct {
 
 // 检测单根K线是否为长实体
 func isLongBody(c common.Candlestick) bool {
-	return utils.Abs(c.Close-c.Open)/(c.High-c.Low) > LongBodyThreshold
+	return tools.Abs(c.Close-c.Open)/(c.High-c.Low) > LongBodyThreshold
 }
 
 // 检测单根K线是否为小实体
 func isShortBody(c common.Candlestick) bool {
-	return utils.Abs(c.Close-c.Open)/(c.High-c.Low) < ShortBodyThreshold
+	return tools.Abs(c.Close-c.Open)/(c.High-c.Low) < ShortBodyThreshold
 }
 
 func (sr *StarReversal) Validate(candles common.Candlesticks, i int) {

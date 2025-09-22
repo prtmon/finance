@@ -2,7 +2,7 @@ package indicators
 
 import (
 	"github.com/prtmon/finance/common"
-	"github.com/prtmon/utils"
+	"github.com/prtmon/tools"
 )
 
 /*
@@ -21,8 +21,8 @@ func DetectEngulfing(ohlcv common.OHLCV) []int64 {
 
 	for i := 1; i < len(output); i++ {
 
-		prevBody := utils.Abs(ohlcv.Close[i-1] - ohlcv.Open[i-1])
-		currentBody := utils.Abs(ohlcv.Open[i] - ohlcv.Open[i])
+		prevBody := tools.Abs(ohlcv.Close[i-1] - ohlcv.Open[i-1])
+		currentBody := tools.Abs(ohlcv.Open[i] - ohlcv.Open[i])
 
 		isEngulfing := false
 		output[i] = 0

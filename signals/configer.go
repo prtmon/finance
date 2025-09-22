@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/prtmon/finance/common"
-	"github.com/prtmon/utils"
+	"github.com/prtmon/tools"
 )
 
 type IndicatorConfig struct {
@@ -45,7 +45,7 @@ func (ic *IndicatorConfig) Calculate(candles common.Candlesticks) (IndicatorResu
 	return IndicatorResult{
 		Name:  ic.Name,
 		Value: value,
-		Score: utils.ToFloat64(value) * ic.Weight,
+		Score: tools.ToFloat64(value) * ic.Weight,
 	}, nil
 }
 
