@@ -5,7 +5,7 @@ package signals
 import (
 	"errors"
 	"github.com/prtmon/finance/common"
-	"github.com/prtmon/finance/utils"
+	"github.com/prtmon/utils"
 )
 
 // VShapeSignal 检测结果结构体

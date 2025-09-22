@@ -1,8 +1,8 @@
 package indicators
 
 import (
-	"gateSTOne/pkg/utils"
 	"github.com/prtmon/finance/common"
+	"github.com/prtmon/utils"
 )
 
 /*

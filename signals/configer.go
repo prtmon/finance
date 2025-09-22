@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/prtmon/finance/common"
-	"github.com/prtmon/finance/utils"
+	"github.com/prtmon/utils"
 )
 
 type IndicatorConfig struct {
