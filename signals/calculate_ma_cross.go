@@ -7,7 +7,6 @@ import (
 )
 
 type MACrossArgs struct {
-	InReal       []float64
 	InFastPeriod int
 	InSlowPeriod int
 	MaType       int

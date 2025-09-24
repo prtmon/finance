@@ -9,29 +9,50 @@ import (
 func test(candles common.Candlesticks) {
 	configs := []signals.IndicatorConfig{
 		{
-			Name:        "Relative Strength Index",
-			Handler:     "RSI",
-			Params:      []byte(`{"period":14}`),
-			Weight:      0.4,
-			Description: "超买超卖指标",
+			Name:        "MACDCross",
+			Handler:     "MACDCross",
+			Params:      []byte(`{"InFastPeriod":12,"InSlowPeriod":26,"InSignalPeriod":9}`),
+			Weight:      1,
+			Description: "MACD金叉死叉信号",
 		},
 		{
-			Name:        "Moving Average Convergence Divergence",
-			Handler:     "MACD",
-			Params:      []byte(`{"fast":12,"slow":26}`),
-			Weight:      0.3,
-			Description: "趋势指标",
+			Name:        "MACross",
+			Handler:     "MACross",
+			Params:      []byte(`{"InFastPeriod":5,"InSlowPeriod":30,"MaType":1}`),
+			Weight:      1,
+			Description: "均线交叉信号",
 		},
 		{
-			Name:        "Bollinger Bands",
-			Handler:     "Bollinger",
-			Params:      []byte(`{"period":20}`),
-			Weight:      0.3,
-			Description: "波动率指标",
+			Name:        "RsiKdjOverTrade",
+			Handler:     "RsiKdjOverTrade",
+			Params:      []byte(`{}`),
+			Weight:      1,
+			Description: "rsi结合kdj超买超卖信号",
+		},
+		{
+			Name:        "StarReversal",
+			Handler:     "StarReversal",
+			Params:      []byte(`{}`),
+			Weight:      1,
+			Description: "早晨之星/黄昏之星反转信号",
+		},
+		{
+			Name:        "Engulfing",
+			Handler:     "Engulfing",
+			Params:      []byte(`{}`),
+			Weight:      1,
+			Description: "吞没型态信号",
+		},
+		{
+			Name:        "Hammer",
+			Handler:     "Hammer",
+			Params:      []byte(`{}`),
+			Weight:      1,
+			Description: "锤头线买卖信号",
 		},
 	}
 
-	signal, results := signals.TradeDecision(candles, configs, 1.5, 1.5)
+	signal, results := signals.TradeDecision(candles, configs, 3.5, 2.5)
 	fmt.Printf("Trade Signal: %s\n", signal)
 	fmt.Println("Indicator Results:")
 	for _, r := range results {
