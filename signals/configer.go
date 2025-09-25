@@ -50,23 +50,23 @@ func (ic *IndicatorConfig) Calculate(candles common.Candlesticks) (IndicatorResu
 }
 
 // TradeDecision buyLow=1.5,sellHigh=-1.5
-func TradeDecision(candles common.Candlesticks, configs []IndicatorConfig, buyLow, sellHigh float64) (TradeSignal, []IndicatorResult) {
+func TradeDecision(candles common.Candlesticks, configs []IndicatorConfig, buyLow, sellHigh float64) (TradeSignal, float64, []IndicatorResult) {
 	var totalScore float64
 	var results []IndicatorResult
 
 	for _, config := range configs {
 		result, err := config.Calculate(candles)
 		if err != nil {
-			return Error, results
+			return Error, 0, results
 		}
 		totalScore += result.Score
 		results = append(results, result)
 	}
 
 	if totalScore > buyLow {
-		return Buy, results
+		return Buy, totalScore, results
 	} else if totalScore < sellHigh {
-		return Sell, results
+		return Sell, totalScore, results
 	}
-	return Hold, results
+	return Hold, totalScore, results
 }
