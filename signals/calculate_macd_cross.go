@@ -2,8 +2,8 @@ package signals
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/prtmon/finance/common"
-	"github.com/prtmon/finance/indicators"
 )
 
 type MACDCrossArgs struct {
@@ -12,16 +12,15 @@ type MACDCrossArgs struct {
 	InSignalPeriod int
 }
 
-func calculateMACDCross(candles common.Candlesticks, params json.RawMessage) (int64, error) {
+func calculateMACDCross(candles common.Candlesticks, params json.RawMessage) ([]int64, error) {
 	var paramStruct MACDCrossArgs
-	ohlcv := candles.ToOhlcv()
 	err := json.Unmarshal(params, &paramStruct) // 反序列化为RawMessage
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
-	output := indicators.MACDCross(ohlcv, paramStruct.InFastPeriod, paramStruct.InSlowPeriod, paramStruct.InSignalPeriod)
+	output := candles.MACDCross(paramStruct.InFastPeriod, paramStruct.InSlowPeriod, paramStruct.InSignalPeriod)
 	if len(output) > 0 {
-		return output[len(output)-1], nil
+		return output, nil
 	}
-	return 0, nil
+	return output, errors.New("the length of the K-line sample data is insufficient")
 }

@@ -2,15 +2,14 @@ package signals
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/prtmon/finance/common"
-	"github.com/prtmon/finance/indicators"
 )
 
-func calculateEngulfing(candles common.Candlesticks, params json.RawMessage) (int64, error) {
-	ohlcv := candles.ToOhlcv()
-	output := indicators.DetectEngulfing(ohlcv)
+func calculateEngulfing(candles common.Candlesticks, params json.RawMessage) ([]int64, error) {
+	output := candles.Engulfing()
 	if len(output) > 0 {
-		return output[len(output)-1], nil
+		return output, nil
 	}
-	return 0, nil
+	return output, errors.New("the length of the K-line sample data is insufficient")
 }

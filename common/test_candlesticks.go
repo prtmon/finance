@@ -59,15 +59,14 @@
 	对于加密货币的指标计算不能与股票的一样，周期更适合短一些，如：原来14天周期的最好改成7天周期，因为行情变换更快
 */
 
-package indicators
+package common
 
 import (
 	"github.com/markcheno/go-talib"
-	"github.com/prtmon/finance/common"
 )
 
 // 扩展指标计算函数
-func CalculateAllIndicators(series common.Candlesticks) map[string]interface{} {
+func CalculateAllIndicators(series Candlesticks) map[string]interface{} {
 	results := make(map[string]interface{})
 	ohlcv := series.ToOhlcv()
 
@@ -98,7 +97,7 @@ func CalculateAllIndicators(series common.Candlesticks) map[string]interface{} {
 	results["BB_Lower"] = lower
 
 	// 6. 随机指标(KDJ)
-	slowK, slowD, slowJ := common.KDJ(ohlcv, 14, 3, talib.EMA, 3, talib.EMA)
+	slowK, slowD, slowJ := KDJ(ohlcv, 14, 3, talib.EMA, 3, talib.EMA)
 	results["KDJ_K"] = slowK
 	results["KDJ_D"] = slowD
 	results["KDJ_J"] = slowJ
@@ -131,17 +130,19 @@ func CalculateAllIndicators(series common.Candlesticks) map[string]interface{} {
 	results["ROC10"] = talib.Roc(ohlcv.Close, 10)
 
 	//16.吞没形态
-	results["ENGULFING"] = DetectEngulfing(ohlcv)
+	results["ENGULFING"] = series.Engulfing()
 
 	//17.锤头线识别
-	results["HAMMER"] = DetectHammerSignals(series)
+	results["HAMMER"] = series.HammerTrend(5, 0.3, 2, 0.1)
 
 	//18.早晨之星形态
-	results["MORNING_STAR"] = DetectStarReversal(series)
+	results["MORNING_STAR"] = series.StarReversal(0.3, 0.7)
 
 	//19.RSI强弱指数-超买超卖
-	results["OverTrade"] = RsiKdjOverTrade(ohlcv, 14, 30, 70, 20, 80)
+	results["OverTradeRSI"] = ohlcv.OverTradeRsi(14, 30, 70)
 
+	//19.RSI强弱指数-超买超卖
+	results["OverTradeKDJ"] = ohlcv.OverTradeKdj(14, 3, 3, 20, 80)
 	//...其他指标
 
 	return results

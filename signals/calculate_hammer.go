@@ -2,14 +2,26 @@ package signals
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/prtmon/finance/common"
-	"github.com/prtmon/finance/indicators"
 )
 
-func calculateHammer(candles common.Candlesticks, params json.RawMessage) (int64, error) {
-	output := indicators.DetectHammerSignals(candles)
-	if len(output) > 0 {
-		return output[len(output)-1], nil
+type HammerTrendArgs struct {
+	TrendConfirmBars int
+	smallBodyRatio   float64
+	largeShadowRatio float64
+	smallShadowRatio float64
+}
+
+func calculateHammer(candles common.Candlesticks, params json.RawMessage) ([]int64, error) {
+	var paramStruct HammerTrendArgs
+	err := json.Unmarshal(params, &paramStruct) // 反序列化为RawMessage
+	if err != nil {
+		return nil, err
 	}
-	return 0, nil
+	output := candles.HammerTrend(paramStruct.TrendConfirmBars, paramStruct.smallBodyRatio, paramStruct.largeShadowRatio, paramStruct.smallShadowRatio)
+	if len(output) > 0 {
+		return output, nil
+	}
+	return output, errors.New("the length of the K-line sample data is insufficient")
 }

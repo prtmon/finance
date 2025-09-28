@@ -1,5 +1,10 @@
 package common
 
+import (
+	"github.com/prtmon/tools"
+	"math"
+)
+
 // Candlestick 定义K线数据结构
 type Candlestick struct {
 	Time   float64
@@ -8,65 +13,47 @@ type Candlestick struct {
 	Low    float64
 	Close  float64
 	Volume float64
-	//预计算字段
-	//RealBody    float64 //abs(收盘价-开盘价)实体
-	//UpperShadow float64 //上影线
-	//LowerShadow float64 //下影线
-	//IsBullish   bool    //涨或跌
 }
 
-type Candlesticks []Candlestick
-
-func (c Candlesticks) Closes() []float64 {
-	closes := make([]float64, len(c))
-	for i, v := range c {
-		closes[i] = v.Close
-	}
-	return closes
+// RealBody 实体大小
+func (c Candlestick) RealBody() float64 {
+	return tools.Abs(c.Close - c.Open)
 }
 
-func (c Candlesticks) Opens() []float64 {
-	opens := make([]float64, len(c))
-	for i, v := range c {
-		opens[i] = v.Open
-	}
-	return opens
+// TotalBody 实体大小
+func (c Candlestick) TotalBody() float64 {
+	return tools.Abs(c.High - c.Close)
 }
 
-func (c Candlesticks) Highs() []float64 {
-	highs := make([]float64, len(c))
-	for i, v := range c {
-		highs[i] = v.High
+// IsSmallBody 是否小实体
+func (c Candlestick) IsSmallBody(bodyRatio float64) bool {
+	rate := math.Abs(bodyRatio)
+	if rate == 0 {
+		rate = 0.3
 	}
-	return highs
+	return c.RealBody()/c.TotalBody() < rate
 }
 
-func (c Candlesticks) Lows() []float64 {
-	lows := make([]float64, len(c))
-	for i, v := range c {
-		lows[i] = v.Low
+// IsLargeBody 是否大实体
+func (c Candlestick) IsLargeBody(bodyRatio float64) bool {
+	rate := math.Abs(bodyRatio)
+	if rate == 0 {
+		rate = 0.7
 	}
-	return lows
+	return c.RealBody()/c.TotalBody() > rate
 }
 
-func (c Candlesticks) ToOhlcv() OHLCV {
-	ohlcv := OHLCV{
-		Time:   make([]float64, len(c)),
-		Open:   make([]float64, len(c)),
-		High:   make([]float64, len(c)),
-		Low:    make([]float64, len(c)),
-		Close:  make([]float64, len(c)),
-		Volume: make([]float64, len(c)),
-	}
+// UpperShadow 上影线
+func (c Candlestick) UpperShadow() float64 {
+	return c.High - math.Max(c.Open, c.Close)
+}
 
-	for i, k := range c {
-		ohlcv.Time[i] = k.Time
-		ohlcv.Open[i] = k.Open
-		ohlcv.High[i] = k.High
-		ohlcv.Low[i] = k.Low
-		ohlcv.Close[i] = k.Close
-		ohlcv.Volume[i] = k.Volume
-	}
+// LowerShadow 下影线
+func (c Candlestick) LowerShadow() float64 {
+	return math.Min(c.Open, c.Close) - c.Low
+}
 
-	return ohlcv
+// IsBullish 是否上涨
+func (c Candlestick) IsBullish() bool {
+	return c.Close > c.Open
 }

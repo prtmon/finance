@@ -52,10 +52,8 @@ func test(candles common.Candlesticks) {
 		},
 	}
 
-	signal, results := signals.TradeDecision(candles, configs, 3.5, 2.5)
-	fmt.Printf("Trade Signal: %s\n", signal)
-	fmt.Println("Indicator Results:")
-	for _, r := range results {
-		fmt.Printf("- %s: Value=%.2f, Score=%.2f\n", r.Name, r.Value, r.Score)
-	}
+	signal, score, _ := signals.TradeDecision(candles, configs, 3.5, 2.5)
+	fmt.Printf("Trade Signal: %+v\n", signal)
+	fmt.Printf("scores: %+v\n", score)
+
 }

@@ -2,28 +2,46 @@ package signals
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/prtmon/finance/common"
-	"github.com/prtmon/finance/indicators"
 )
 
-type RsiKdjOverTradeArgs struct {
+type OverTradeRsiArgs struct {
 	InTimePeriod int
 	RsiLowValue  float64
 	RsiHighValue float64
-	KdjLowValue  float64
-	KdjHighValue float64
 }
 
-func calculateRsiKdjOverTrade(candles common.Candlesticks, params json.RawMessage) (int64, error) {
-	var paramStruct RsiKdjOverTradeArgs
-	ohlcv := candles.ToOhlcv()
+func calculateOverTradeRsi(candles common.Candlesticks, params json.RawMessage) ([]int64, error) {
+	var paramStruct OverTradeRsiArgs
 	err := json.Unmarshal(params, &paramStruct) // 反序列化为RawMessage
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
-	output := indicators.RsiKdjOverTrade(ohlcv, paramStruct.InTimePeriod, paramStruct.RsiLowValue, paramStruct.RsiHighValue, paramStruct.KdjLowValue, paramStruct.KdjHighValue)
+	output := candles.OverTradeRsi(paramStruct.InTimePeriod, paramStruct.RsiLowValue, paramStruct.RsiHighValue)
 	if len(output) > 0 {
-		return output[len(output)-1], nil
+		return output, nil
 	}
-	return 0, nil
+	return output, errors.New("the length of the K-line sample data is insufficient")
+}
+
+type OverTradeKdjArgs struct {
+	InFastKPeriod int
+	InSlowKPeriod int
+	InSlowDPeriod int
+	KdjLowValue   float64
+	KdjHighValue  float64
+}
+
+func calculateOverTradeKdj(candles common.Candlesticks, params json.RawMessage) ([]int64, error) {
+	var paramStruct OverTradeKdjArgs
+	err := json.Unmarshal(params, &paramStruct) // 反序列化为RawMessage
+	if err != nil {
+		return nil, err
+	}
+	output := candles.OverTradeKdj(paramStruct.InFastKPeriod, paramStruct.InSlowKPeriod, paramStruct.InSlowDPeriod, paramStruct.KdjLowValue, paramStruct.KdjHighValue)
+	if len(output) > 0 {
+		return output, nil
+	}
+	return output, errors.New("the length of the K-line sample data is insufficient")
 }
