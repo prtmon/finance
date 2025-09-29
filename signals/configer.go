@@ -26,8 +26,8 @@ var indicatorHandlers = map[string]func(candles common.Candlesticks, jsonParam j
 	"MACross":      calculateMACross,
 	"MACDCross":    calculateMACDCross,
 	"StarReversal": calculateStarReversal,
-	"RsiOverTrade": calculateOverTradeRsi,
-	"KdjOverTrade": calculateOverTradeKdj,
+	"OverTradeRsi": calculateOverTradeRsi,
+	"OverTradeKdj": calculateOverTradeKdj,
 	"Hammer":       calculateHammer,
 	"Engulfing":    calculateEngulfing,
 }
