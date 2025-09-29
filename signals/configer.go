@@ -57,6 +57,8 @@ func (ic *IndicatorConfig) Calculate(candles common.Candlesticks) (IndicatorResu
 func TradeDecision(candles common.Candlesticks, configs []IndicatorConfig, buyLow, sellHigh float64) ([]TradeSignal, []float64, []IndicatorResult) {
 
 	var results []IndicatorResult
+	tradeSignals := make([]TradeSignal, len(candles))
+	totalScores := make([]float64, len(candles))
 
 	for _, config := range configs {
 		result, err := config.Calculate(candles)
@@ -65,8 +67,7 @@ func TradeDecision(candles common.Candlesticks, configs []IndicatorConfig, buyLo
 		}
 		results = append(results, result)
 	}
-	tradeSignals := make([]TradeSignal, len(candles))
-	totalScores := make([]float64, len(candles))
+
 	for i := 0; i < len(candles); i++ {
 		for _, result := range results {
 			totalScores[i] += result.Score[i]
