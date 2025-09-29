@@ -4,11 +4,20 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/prtmon/finance/common"
-	"github.com/prtmon/finance/indicators"
 )
 
+type StarReversalArgs struct {
+	smallBodyRatio float64
+	largeBodyRatio float64
+}
+
 func calculateStarReversal(candles common.Candlesticks, params json.RawMessage) ([]int64, error) {
-	output := indicators.DetectStarReversal(candles)
+	var paramStruct StarReversalArgs
+	err := json.Unmarshal(params, &paramStruct) // 反序列化为RawMessage
+	if err != nil {
+		return nil, err
+	}
+	output := candles.StarReversal(paramStruct.smallBodyRatio, paramStruct.largeBodyRatio)
 	if len(output) > 0 {
 		return output, nil
 	}
