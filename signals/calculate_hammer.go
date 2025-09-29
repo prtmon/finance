@@ -8,9 +8,9 @@ import (
 
 type HammerTrendArgs struct {
 	TrendConfirmBars int
-	smallBodyRatio   float64
-	largeShadowRatio float64
-	smallShadowRatio float64
+	SmallBodyRatio   float64
+	LargeShadowRatio float64
+	SmallShadowRatio float64
 }
 
 func calculateHammer(candles common.Candlesticks, params json.RawMessage) ([]int64, error) {
@@ -19,7 +19,7 @@ func calculateHammer(candles common.Candlesticks, params json.RawMessage) ([]int
 	if err != nil {
 		return nil, err
 	}
-	output := candles.HammerTrend(paramStruct.TrendConfirmBars, paramStruct.smallBodyRatio, paramStruct.largeShadowRatio, paramStruct.smallShadowRatio)
+	output := candles.HammerTrend(paramStruct.TrendConfirmBars, paramStruct.SmallBodyRatio, paramStruct.LargeShadowRatio, paramStruct.SmallShadowRatio)
 	if len(output) > 0 {
 		return output, nil
 	}

@@ -7,8 +7,8 @@ import (
 )
 
 type StarReversalArgs struct {
-	smallBodyRatio float64
-	largeBodyRatio float64
+	SmallBodyRatio float64
+	LargeBodyRatio float64
 }
 
 func calculateStarReversal(candles common.Candlesticks, params json.RawMessage) ([]int64, error) {
@@ -17,7 +17,7 @@ func calculateStarReversal(candles common.Candlesticks, params json.RawMessage) 
 	if err != nil {
 		return nil, err
 	}
-	output := candles.StarReversal(paramStruct.smallBodyRatio, paramStruct.largeBodyRatio)
+	output := candles.StarReversal(paramStruct.SmallBodyRatio, paramStruct.LargeBodyRatio)
 	if len(output) > 0 {
 		return output, nil
 	}
